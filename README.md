@@ -1,54 +1,55 @@
-# YouTube Comment Timeline Overlay 🎥💬
+# YouTube Comment Timeline 🎥💬
 
-Eine Firefox-Erweiterung, die YouTube-Kommentare direkt auf der Video-Zeitleiste visualisiert. Finde sofort die spannendsten Stellen im Video basierend auf den Zeitstempeln der Community.
+A Firefox extension that visualizes YouTube comments directly on the video timeline. Find the most engaging parts of a video instantly based on community timestamps.
 
-![Screenshot der Erweiterung](https://via.placeholder.com/800x400?text=Hier+Screenshot+einfügen) 
-*(Füge hier später einen Screenshot deiner Erweiterung ein)*
+![Extension Screenshot](https://via.placeholder.com/800x400?text=Insert+Screenshot+Here)
+*(Place a screenshot of your extension here later)*
 
-## ✨ Funktionen
+## ✨ Features
 
-* **Timeline Marker:** Goldene Markierungen auf der Progress-Bar zeigen an, wo kommentiert wurde.
-* **Intelligentes Clustering:** Bei vielen Kommentaren an einer Stelle werden diese gruppiert, um die Performance zu schonen.
+* **Timeline Markers:** Gold markers on the progress bar indicate where comments refer to specific moments.
+* **Smart Clustering:** High-density comment sections are grouped into clusters to maintain performance and readability.
 * **Rich Tooltips:**
-    * Zeigt den vollen Kommentartext.
-    * Zeigt Profilbild (Avatar) des Autors.
-    * **Social Stats:** Zeigt Likes 👍 und Anzahl der Antworten 💬.
-* **Interaktivität:**
-    * Klick auf einen Marker springt exakt zur entsprechenden Stelle im Video.
-    * Klick auf den Kommentar im Tooltip scrollt automatisch zum Original-Kommentar unter dem Video.
-* **Auto-Update:** Erkennt neu geladene Kommentare beim Scrollen.
-* **Fullscreen & Dark Mode Support:** Fügt sich nahtlos in das native YouTube-Design ein.
+    * Displays full comment text.
+    * Shows user avatars.
+    * **Social Stats:** See likes 👍 and reply counts 💬 at a glance.
+* **Interactive Navigation:**
+    * **Click Marker:** Seeks the video exactly to the timestamp of the comment.
+    * **Click Tooltip:** Scrolls down to the original comment in the discussion section.
+    * **Cluster Support:** Select specific comments from a list when multiple events happen close together.
+* **Auto-Update:** Automatically detects and adds markers for new comments as you scroll down the page.
+* **Native Design:** Seamlessly integrates with the YouTube player (supports Dark Mode & Fullscreen).
 
-## 🚀 Installation (für Entwickler)
+## 🚀 Installation (Developer Mode)
 
-1.  Klone dieses Repository oder lade es als ZIP herunter.
-2.  Öffne Firefox und gib `about:debugging` in die Adresszeile ein.
-3.  Klicke links auf **"Dieser Firefox"**.
-4.  Klicke auf **"Temporäres Add-on laden..."**.
-5.  Wähle die Datei `manifest.json` aus diesem Ordner aus.
-6.  Öffne ein YouTube-Video und genieße die neue Timeline!
+1.  Clone this repository or download the ZIP.
+2.  Open Firefox and navigate to `about:debugging`.
+3.  Click on **"This Firefox"** in the sidebar.
+4.  Click **"Load Temporary Add-on..."**.
+5.  Select the `manifest.json` file from this project folder.
+6.  Open any YouTube video and enjoy the timeline!
 
-## 📦 Installation (für Nutzer)
+## 📦 Installation (For Users)
 
-*(Hier kommt später der Link zum Firefox Add-on Store hin)*
+*(Link to Firefox Add-ons Store will go here)*
 [Download from Firefox Add-ons](https://addons.mozilla.org/...)
 
-## 🛠 Technologien
+## 🛠 Technologies
 
 * JavaScript (ES6+)
-* CSS3 (Native YouTube Styles)
+* CSS3 (Native YouTube styling)
 * Firefox WebExtension API (Manifest V3)
 
-## 🤝 Mitwirken
+## 🤝 Contributing
 
-Beiträge sind willkommen! Fühle dich frei, Issues zu öffnen oder Pull Requests einzureichen.
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-1.  Fork das Projekt.
-2.  Erstelle deinen Feature Branch (`git checkout -b feature/TollesFeature`).
-3.  Committe deine Änderungen (`git commit -m 'Add some TollesFeature'`).
-4.  Push auf den Branch (`git push origin feature/TollesFeature`).
-5.  Öffne einen Pull Request.
+1.  Fork the project.
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
-## 📄 Lizenz
+## 📄 License
 
-Dieses Projekt ist unter der MIT Lizenz lizensiert - siehe die [LICENSE](LICENSE) Datei für Details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
