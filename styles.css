@@ -1,0 +1,234 @@
+/* --- CONTAINER & MARKER --- */
+#yt-comment-timeline-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 60; 
+}
+
+/* Standard Marker */
+.yt-timeline-marker {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 100%;
+  background-color: rgba(255, 204, 0, 0.7);
+  cursor: pointer;
+  pointer-events: auto; 
+  transition: transform 0.1s ease, background-color 0.1s;
+  z-index: 60; 
+}
+
+/* Cluster Marker (breiter/dunkler) */
+.yt-timeline-marker.is-cluster {
+  background-color: rgba(255, 160, 0, 0.9);
+  width: 6px; 
+}
+
+.yt-timeline-marker:hover {
+  transform: scaleY(1.5);
+  background-color: #ffcc00;
+  z-index: 61;
+}
+
+/* --- TOOLTIP (KARTE) --- */
+
+#yt-timeline-tooltip-container {
+  position: fixed; 
+  display: none;
+  
+  width: 450px; 
+  background-color: #212121;
+  border: 1px solid #3e3e3e;
+  border-radius: 8px;
+  padding: 0; 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.9);
+  
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 14px;
+  
+  z-index: 2147483647; 
+  pointer-events: auto; 
+  
+  /* WICHTIG: Standard ist kein Pointer mehr, nur interaktive Teile sind klickbar */
+  cursor: default; 
+}
+
+#yt-timeline-tooltip-container:hover {
+  border-color: #ffcc00;
+}
+
+/* --- INHALT SINGLE COMMENT --- */
+.yt-tooltip-content-single {
+  padding: 16px;
+  cursor: pointer; /* Einzeltreffer ist komplett klickbar */
+}
+
+.yt-tooltip-content-single:hover {
+  background-color: #2a2a2a; /* Feedback */
+}
+
+/* Header Grid */
+.yt-tooltip-header {
+  display: flex;
+  align-items: flex-start; 
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.yt-tooltip-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+  background-color: #444; 
+}
+
+.yt-tooltip-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.yt-tooltip-author {
+  font-weight: bold;
+  color: #fff;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* Statistik Zeile */
+.yt-tooltip-stats {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #aaa;
+  gap: 15px; 
+}
+
+.yt-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.yt-stat-icon {
+  width: 14px;
+  height: 14px;
+  fill: #999;
+}
+
+.yt-tooltip-hint {
+  font-size: 10px;
+  color: #ffcc00;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-left: auto; 
+  white-space: nowrap;
+  align-self: center;
+}
+
+/* Textbereich */
+.yt-tooltip-text {
+  line-height: 1.5;
+  color: #eee;
+  font-size: 14px;
+  max-height: 200px; 
+  overflow-y: auto;  
+  word-wrap: break-word;
+}
+
+/* --- CLUSTER (Liste) --- */
+.yt-tooltip-cluster-header {
+  padding: 10px 16px;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #3e3e3e;
+  font-weight: bold;
+  color: #ffcc00;
+  font-size: 12px;
+  border-radius: 8px 8px 0 0;
+  cursor: default; /* Header nicht klickbar */
+}
+
+.yt-cluster-list {
+  max-height: 350px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.yt-cluster-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: flex-start;
+  transition: background 0.2s;
+  cursor: pointer; /* Hier ist der Klickbereich */
+}
+
+.yt-cluster-item:hover {
+  background-color: #2a2a2a;
+}
+
+.yt-cluster-item:last-child {
+  border-bottom: none;
+}
+
+.yt-cluster-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+
+.yt-cluster-content {
+  flex: 1;
+}
+
+.yt-cluster-author {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ccc;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.yt-cluster-stats-mini {
+  font-size: 10px;
+  color: #777;
+  font-weight: normal;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.yt-cluster-text {
+  font-size: 13px;
+  color: #eee;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Scrollbars */
+.yt-tooltip-text::-webkit-scrollbar,
+.yt-cluster-list::-webkit-scrollbar {
+  width: 8px;
+}
+.yt-tooltip-text::-webkit-scrollbar-thumb,
+.yt-cluster-list::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}

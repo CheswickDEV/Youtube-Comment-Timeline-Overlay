@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "YT Comment Timeline",
+  "version": "1.0",
+  "description": "Zeigt Zeitstempel aus Kommentaren auf der Timeline an.",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
