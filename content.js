@@ -1,7 +1,7 @@
-// --- ICONS ---
-const ICON_THUMB = `<svg viewBox="0 0 24 24" class="yt-stat-icon"><path d="M1,21h4V9H1V21z M23,10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57c0.03-0.32-0.25-0.75-0.62-1.12c-0.32-0.32-0.75-0.5-1.19-0.5L12,2 l-7.29,7.29C4.25,9.75,4,10.35,4,11v9c0,1.1,0.9,2,2,2h11c0.83,0,1.54-0.5,1.84-1.22l3.02-7.05C21.96,13.54,22,13.28,22,13 L23,10z"></path></svg>`;
-const ICON_REPLY = `<svg viewBox="0 0 24 24" class="yt-stat-icon"><path d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z"></path></svg>`;
-
+// --- ICONS (SVG Strings) ---
+// Wir nutzen hier Strings, wandeln sie aber unten sicher mit DOMParser um
+const ICON_THUMB_XML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="yt-stat-icon"><path d="M1,21h4V9H1V21z M23,10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57c0.03-0.32-0.25-0.75-0.62-1.12c-0.32-0.32-0.75-0.5-1.19-0.5L12,2 l-7.29,7.29C4.25,9.75,4,10.35,4,11v9c0,1.1,0.9,2,2,2h11c0.83,0,1.54-0.5,1.84-1.22l3.02-7.05C21.96,13.54,22,13.28,22,13 L23,10z"></path></svg>`;
+const ICON_REPLY_XML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="yt-stat-icon"><path d="M20,2H4C2.9,2,2,2.9,2,4v18l4-4h14c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z"></path></svg>`;
 
 // --- HILFSFUNKTIONEN ---
 
@@ -124,7 +124,165 @@ function scrollToComment(element) {
   }
 }
 
-// --- TOOLTIP RENDERING ---
+// --- DOM BUILDER HELPERS (100% Sicher: DOMParser statt innerHTML) ---
+
+// WICHTIG: Diese Funktion nutzt jetzt DOMParser. Das ist sicher und erlaubt.
+function createIcon(xmlString) {
+  const parser = new DOMParser();
+  // Wandelt den String in ein echtes XML/SVG Dokument um
+  const doc = parser.parseFromString(xmlString, "image/svg+xml");
+  // Gibt das Wurzelelement (das <svg> Tag) zurück
+  return doc.documentElement; 
+}
+
+function buildSingleTooltip(comment, videoElement) {
+  const container = document.createElement('div');
+  container.className = 'yt-tooltip-content-single';
+  
+  // Header
+  const header = document.createElement('div');
+  header.className = 'yt-tooltip-header';
+  
+  // Avatar
+  const avatar = document.createElement('img');
+  avatar.className = 'yt-tooltip-avatar';
+  avatar.src = comment.avatarUrl;
+  avatar.onerror = () => { avatar.style.display = 'none'; };
+  header.appendChild(avatar);
+  
+  // Meta Info
+  const meta = document.createElement('div');
+  meta.className = 'yt-tooltip-meta';
+  
+  const author = document.createElement('span');
+  author.className = 'yt-tooltip-author';
+  author.textContent = comment.author; 
+  meta.appendChild(author);
+  
+  const stats = document.createElement('div');
+  stats.className = 'yt-tooltip-stats';
+  
+  // Likes
+  const statLike = document.createElement('span');
+  statLike.className = 'yt-stat-item';
+  statLike.title = 'Likes';
+  statLike.appendChild(createIcon(ICON_THUMB_XML));
+  statLike.appendChild(document.createTextNode(' ' + comment.likeCount));
+  stats.appendChild(statLike);
+
+  // Replies
+  const statReply = document.createElement('span');
+  statReply.className = 'yt-stat-item';
+  statReply.title = 'Replies';
+  statReply.appendChild(createIcon(ICON_REPLY_XML));
+  statReply.appendChild(document.createTextNode(' ' + comment.replyCount));
+  stats.appendChild(statReply);
+  
+  meta.appendChild(stats);
+  header.appendChild(meta);
+  
+  // Hint
+  const hint = document.createElement('span');
+  hint.className = 'yt-tooltip-hint';
+  hint.textContent = 'Zum Kommentar ➜';
+  header.appendChild(hint);
+  
+  container.appendChild(header);
+  
+  // Text
+  const textDiv = document.createElement('div');
+  textDiv.className = 'yt-tooltip-text';
+  textDiv.textContent = comment.text; // Sicher: textContent
+  container.appendChild(textDiv);
+
+  // Click Event
+  container.onclick = (e) => {
+      e.stopPropagation();
+      scrollToComment(comment.element);
+      if (videoElement) {
+          videoElement.currentTime = comment.seconds;
+          videoElement.play();
+      }
+  };
+
+  return container;
+}
+
+function buildClusterTooltip(cluster, videoElement) {
+  const container = document.createElement('div');
+  
+  // Header
+  const header = document.createElement('div');
+  header.className = 'yt-tooltip-cluster-header';
+  header.textContent = `${cluster.length} Kommentare an dieser Stelle`;
+  container.appendChild(header);
+  
+  // Liste
+  const ul = document.createElement('ul');
+  ul.className = 'yt-cluster-list';
+  
+  cluster.forEach((comment) => {
+      const li = document.createElement('li');
+      li.className = 'yt-cluster-item';
+      
+      // Avatar
+      const img = document.createElement('img');
+      img.className = 'yt-cluster-avatar';
+      img.src = comment.avatarUrl;
+      li.appendChild(img);
+      
+      // Content
+      const content = document.createElement('div');
+      content.className = 'yt-cluster-content';
+      
+      const authorRow = document.createElement('div');
+      authorRow.className = 'yt-cluster-author';
+      
+      const authorName = document.createElement('span');
+      authorName.textContent = comment.author;
+      authorRow.appendChild(authorName);
+      
+      const statsMini = document.createElement('div');
+      statsMini.className = 'yt-cluster-stats-mini';
+      
+      const likesSpan = document.createElement('span');
+      likesSpan.textContent = `${comment.likeCount} 👍`;
+      statsMini.appendChild(likesSpan);
+
+      const timeSpan = document.createElement('span');
+      timeSpan.style.marginLeft = '5px';
+      timeSpan.textContent = comment.timestampStr;
+      statsMini.appendChild(timeSpan);
+      
+      authorRow.appendChild(statsMini);
+      content.appendChild(authorRow);
+      
+      // Text
+      const textDiv = document.createElement('div');
+      textDiv.className = 'yt-cluster-text';
+      textDiv.textContent = comment.text;
+      content.appendChild(textDiv);
+      
+      li.appendChild(content);
+      
+      // Click Event pro Item
+      li.onclick = (e) => {
+          e.stopPropagation();
+          scrollToComment(comment.element);
+          if (videoElement) {
+              videoElement.currentTime = comment.seconds;
+              videoElement.play();
+          }
+      };
+      
+      ul.appendChild(li);
+  });
+  
+  container.appendChild(ul);
+  return container;
+}
+
+// --- TOOLTIP LOGIC ---
 
 let tooltipEl = null;
 let hideTimeout = null;
@@ -143,104 +301,30 @@ function createGlobalTooltip() {
   document.body.appendChild(tooltipEl);
 }
 
-function renderSingleTooltip(comment) {
-  return `
-    <div class="yt-tooltip-content-single">
-      <div class="yt-tooltip-header">
-        <img src="${comment.avatarUrl}" class="yt-tooltip-avatar" onerror="this.style.display='none'">
-        <div class="yt-tooltip-meta">
-            <span class="yt-tooltip-author">${comment.author}</span>
-            <div class="yt-tooltip-stats">
-                <span class="yt-stat-item" title="Likes">${ICON_THUMB} ${comment.likeCount}</span>
-                <span class="yt-stat-item" title="Replies">${ICON_REPLY} ${comment.replyCount}</span>
-            </div>
-        </div>
-        <span class="yt-tooltip-hint">Zum Kommentar ➜</span>
-      </div>
-      <div class="yt-tooltip-text">${comment.text}</div>
-    </div>
-  `;
-}
-
-function renderClusterTooltip(cluster) {
-  let html = `<div class="yt-tooltip-cluster-header">${cluster.length} Kommentare an dieser Stelle</div>`;
-  html += `<ul class="yt-cluster-list">`;
-  
-  cluster.forEach((comment, index) => {
-    html += `
-      <li class="yt-cluster-item" data-index="${index}">
-        <img src="${comment.avatarUrl}" class="yt-cluster-avatar">
-        <div class="yt-cluster-content">
-          <div class="yt-cluster-author">
-             <span>${comment.author}</span>
-             <div class="yt-cluster-stats-mini">
-                <span>${comment.likeCount} 👍</span>
-                <span style="margin-left:5px">${comment.timestampStr}</span>
-             </div>
-          </div>
-          <div class="yt-cluster-text">${comment.text}</div>
-        </div>
-      </li>
-    `;
-  });
-  
-  html += `</ul>`;
-  return html;
-}
-
 function showTooltip(marker, cluster) {
   if (!tooltipEl) return;
   if (hideTimeout) clearTimeout(hideTimeout);
   
-  // WICHTIG: Alte Klick-Listener auf dem Container entfernen
+  // Inhalt sicher löschen
+  while (tooltipEl.firstChild) {
+      tooltipEl.removeChild(tooltipEl.firstChild);
+  }
   tooltipEl.onclick = null;
 
   const isCluster = cluster.length > 1;
   const videoElement = document.querySelector('video');
   
+  // Elemente zusammenbauen
+  let contentNode;
   if (isCluster) {
-    // --- CLUSTER MODUS ---
-    tooltipEl.innerHTML = renderClusterTooltip(cluster);
-    
-    // Klick-Events NUR auf die Listeneinträge legen
-    const items = tooltipEl.querySelectorAll('.yt-cluster-item');
-    items.forEach(item => {
-      item.onclick = (e) => {
-        e.stopPropagation();
-        const idx = item.getAttribute('data-index');
-        const selectedComment = cluster[idx];
-        
-        // 1. Scrollen
-        scrollToComment(selectedComment.element);
-        
-        // 2. Video Zeit exakt setzen (Fix für Timestamp-Mismatch)
-        if (videoElement) {
-             videoElement.currentTime = selectedComment.seconds;
-             videoElement.play();
-        }
-      };
-    });
-    
+      contentNode = buildClusterTooltip(cluster, videoElement);
   } else {
-    // --- SINGLE MODUS ---
-    tooltipEl.innerHTML = renderSingleTooltip(cluster[0]);
-    
-    // Klick auf den Inhalt (Klasse .yt-tooltip-content-single)
-    const contentDiv = tooltipEl.querySelector('.yt-tooltip-content-single');
-    if (contentDiv) {
-        contentDiv.onclick = (e) => {
-          e.stopPropagation(); 
-          scrollToComment(cluster[0].element);
-          // Optional: Auch hier Zeit nochmal setzen
-          if (videoElement) {
-               videoElement.currentTime = cluster[0].seconds;
-               videoElement.play();
-          }
-        };
-    }
+      contentNode = buildSingleTooltip(cluster[0], videoElement);
   }
+  
+  tooltipEl.appendChild(contentNode);
 
-  // --- POSITIONING & PARENT SWITCHING ---
+  // Positionierung
   const isFullscreen = document.fullscreenElement !== null;
   const player = document.querySelector('#movie_player');
   
@@ -276,7 +360,7 @@ function hideTooltip() {
   }, 300); 
 }
 
-// --- HAUPT PROGRAMM ---
+// --- MAIN ---
 
 function initOverlay() {
   autoLoadMoreComments();
@@ -316,7 +400,6 @@ function initOverlay() {
     marker.addEventListener('mouseenter', () => { showTooltip(marker, cluster); });
     marker.addEventListener('mouseleave', () => { hideTooltip(); });
     
-    // Klick auf Marker auf der Leiste -> Springt immer zum ersten Kommentar des Clusters
     marker.addEventListener('click', (e) => {
       e.stopPropagation();
       videoElement.currentTime = firstComment.seconds;

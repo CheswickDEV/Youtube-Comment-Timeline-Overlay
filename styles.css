@@ -9,7 +9,6 @@
   z-index: 60; 
 }
 
-/* Standard Marker */
 .yt-timeline-marker {
   position: absolute;
   bottom: 0;
@@ -22,7 +21,6 @@
   z-index: 60; 
 }
 
-/* Cluster Marker (breiter/dunkler) */
 .yt-timeline-marker.is-cluster {
   background-color: rgba(255, 160, 0, 0.9);
   width: 6px; 
@@ -53,8 +51,6 @@
   
   z-index: 2147483647; 
   pointer-events: auto; 
-  
-  /* WICHTIG: Standard ist kein Pointer mehr, nur interaktive Teile sind klickbar */
   cursor: default; 
 }
 
@@ -62,17 +58,16 @@
   border-color: #ffcc00;
 }
 
-/* --- INHALT SINGLE COMMENT --- */
+/* --- INHALT --- */
 .yt-tooltip-content-single {
   padding: 16px;
-  cursor: pointer; /* Einzeltreffer ist komplett klickbar */
+  cursor: pointer;
 }
 
 .yt-tooltip-content-single:hover {
-  background-color: #2a2a2a; /* Feedback */
+  background-color: #2a2a2a; 
 }
 
-/* Header Grid */
 .yt-tooltip-header {
   display: flex;
   align-items: flex-start; 
@@ -104,7 +99,6 @@
   margin-bottom: 4px;
 }
 
-/* Statistik Zeile */
 .yt-tooltip-stats {
   display: flex;
   align-items: center;
@@ -119,6 +113,7 @@
   gap: 5px; 
 }
 
+.yt-stat-item-icon-wrapper svg,
 .yt-stat-icon {
   width: 14px;
   height: 14px;
@@ -135,7 +130,6 @@
   align-self: center;
 }
 
-/* Textbereich */
 .yt-tooltip-text {
   line-height: 1.5;
   color: #eee;
@@ -145,7 +139,7 @@
   word-wrap: break-word;
 }
 
-/* --- CLUSTER (Liste) --- */
+/* --- CLUSTER --- */
 .yt-tooltip-cluster-header {
   padding: 10px 16px;
   background-color: #2a2a2a;
@@ -154,7 +148,7 @@
   color: #ffcc00;
   font-size: 12px;
   border-radius: 8px 8px 0 0;
-  cursor: default; /* Header nicht klickbar */
+  cursor: default;
 }
 
 .yt-cluster-list {
@@ -171,7 +165,7 @@
   display: flex;
   align-items: flex-start;
   transition: background 0.2s;
-  cursor: pointer; /* Hier ist der Klickbereich */
+  cursor: pointer;
 }
 
 .yt-cluster-item:hover {
@@ -222,7 +216,6 @@
   overflow: hidden;
 }
 
-/* Scrollbars */
 .yt-tooltip-text::-webkit-scrollbar,
 .yt-cluster-list::-webkit-scrollbar {
   width: 8px;
