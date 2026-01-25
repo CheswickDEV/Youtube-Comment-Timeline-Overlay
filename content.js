@@ -17,6 +17,9 @@ function parseTimestampToSeconds(timeStr) {
 }
 
 function autoLoadMoreComments() {
+  // NUR auf Video-Seiten scrollen! (URL muss /watch?v= enthalten)
+  if (!window.location.href.includes('/watch?v=')) return;
+  
   const currentCount = document.querySelectorAll('ytd-comment-thread-renderer').length;
   if (currentCount > 600) return;
 
@@ -363,6 +366,9 @@ function hideTooltip() {
 // --- MAIN ---
 
 function initOverlay() {
+  // NUR auf Video-Seiten ausführen!
+  if (!window.location.href.includes('/watch?v=')) return;
+  
   autoLoadMoreComments();
 
   const videoElement = document.querySelector('video');
